@@ -9,14 +9,14 @@ kubectl apply \
 --selector knative.dev/crd-install=true \
 --filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml
 
-sleep 5
+sleep 10
 
 # Minimal knative serving
 kubectl apply \
 --selector networking.knative.dev/certificate-provider!=cert-manager \
 --filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml
 
-sleep 5
+sleep 10
 
 DOMAIN="127.0.0.1.xip.io"
 echo "Setting up local domain ${DOMAIN}"
@@ -28,7 +28,7 @@ kn service create hello --image gcr.io/knative-samples/helloworld-go
 
 kn service list
 
-curl http://hello.default.127.0.0.1.xip.io
+curl http://hello.default.127.0.0.1.xip.io -v
 
 
 
