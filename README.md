@@ -1,7 +1,7 @@
 Setup Knative on Kind (Kubernetes In Docker)
 
 # TLDR
-Install `kind` and `docker` configured with 6 CPUs and 8GB Mem.
+Install `kind` and `docker` configured with 4 CPUs and 8GB Mem.
 ```
 ./1-create-kind-cluster.sh 
 ./2-install-istio-lean.sh
