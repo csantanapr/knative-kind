@@ -8,8 +8,11 @@ kubectl apply -f https://raw.githubusercontent.com/csantanapr/knative-serving/is
 sleep 5
 
 # some stupid reason some CRDS race condition running twice
-kubectl apply -f https://raw.githubusercontent.com/csantanapr/knative-serving/istio-1.2.2/third_party/istio-1.2.2/istio-nodeport-32000.yaml \
-|| sleep 5 || kubectl apply -f https://raw.githubusercontent.com/csantanapr/knative-serving/istio-1.2.2/third_party/istio-1.2.2/istio-nodeport-32000.yaml
+set +e
+kubectl apply -f https://raw.githubusercontent.com/csantanapr/knative-serving/istio-1.2.2/third_party/istio-1.2.2/istio-nodeport-32000.yaml
+set -e
+sleep 5
+kubectl apply -f https://raw.githubusercontent.com/csantanapr/knative-serving/istio-1.2.2/third_party/istio-1.2.2/istio-nodeport-32000.yaml
 
 kubectl get pods -n istio-system
 

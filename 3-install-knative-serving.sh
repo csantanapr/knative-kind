@@ -4,47 +4,36 @@ set -xeu
 
 KNATIVE_VERSION=${KNATIVE_VERSION:="0.7.1"}
 
-# Minimal CRDs
-kubectl apply \
---selector knative.dev/crd-install=true \
---filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml
-
+set +e
+kubectl apply --filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving-beta-crds.yaml
+set -e
+sleep 5
+kubectl apply --filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving-beta-crds.yaml
 sleep 10
 
-# Minimal knative serving
+set +e
 kubectl apply \
 --selector networking.knative.dev/certificate-provider!=cert-manager \
---filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml
+--filename https://github.com/knative/serving/releases/download/v0.7.1/serving-post-1.14.yaml
+sleep 5
+set -e
+kubectl apply \
+--selector networking.knative.dev/certificate-provider!=cert-manager \
+--filename https://github.com/knative/serving/releases/download/v0.7.1/serving-post-1.14.yaml
 
-sleep 10
+sleep 20
+kubectl get pods --namespace knative-serving
 
 DOMAIN="127.0.0.1.xip.io"
 echo "Setting up local domain ${DOMAIN}"
 kubectl patch configmap -n knative-serving config-domain -p "{\"data\": {\"${DOMAIN}\": \"\"}}"
 
-kubectl get pods --namespace knative-serving
+kubectl apply --filename hello-function.yaml
 
-kn service create hello --image gcr.io/knative-samples/helloworld-go
+sleep 30
 
-kn service list
+kubectl get ksvc
 
-curl http://hello.default.127.0.0.1.xip.io -v
+sleep 30
 
-
-
-
-
-
-# Whole enchilada CRDs
-#kubectl apply \
-#--selector knative.dev/crd-install=true \
-#--filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml \
-#--filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/monitoring.yaml
-
-# Whole enchilada 
-#kubectl apply  \
-#--selector networking.knative.dev/certificate-provider!=cert-manager \
-#--filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/serving.yaml
-#--filename https://github.com/knative/build/releases/download/v${KNATIVE_VERSION}/build.yaml \
-#--filename https://github.com/knative/eventing/releases/download/v${KNATIVE_VERSION}/release.yaml \
-#--filename https://github.com/knative/serving/releases/download/v${KNATIVE_VERSION}/monitoring.yaml
+curl http://hello.default.127.0.0.1.xip.io

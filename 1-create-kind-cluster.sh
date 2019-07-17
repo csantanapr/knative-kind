@@ -10,4 +10,6 @@ export KUBECONFIG="$(kind get kubeconfig-path --name="${CLUSTER_NAME}")"
 
 kubectl cluster-info
 
+sleep 30
+
 kubectl get nodes
