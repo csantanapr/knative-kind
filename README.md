@@ -3,8 +3,8 @@ Setup Knative on Kind (Kubernetes In Docker)
 # TLDR
 Install `kind` and `docker` with 6 CPUs and 8GB Mem.
 ```
-./1-install_kind.sh  
-./2a-install-istio-lean.sh
+./1-create-kind-cluster.sh 
+./2-install-istio-lean.sh
 ./3-install-knative-serving.sh
 open http://hello.default.127.0.0.1.xip.io
 ```
@@ -73,7 +73,7 @@ kubectl get nodes
 
 Run the following script
 ```
-./2a-install-istio-lean.sh
+./2-install-istio-lean.sh
 ```
 
 ## Install full Istio
