@@ -1,4 +1,4 @@
-Setup Knative on Kind (Kubernetes In Docker)
+Setup Knative on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
 
 # TLDR
 Install `kind` and `docker` configured with 4 CPUs and 8GB Mem.
