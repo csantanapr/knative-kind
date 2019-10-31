@@ -6,7 +6,7 @@ Install `kind` and `docker` configured with 4 CPUs and 8GB Mem.
 ./1-create-kind-cluster.sh 
 ./2-install-istio-lean.sh
 ./3-install-knative-serving.sh
-open http://hello.default.127.0.0.1.xip.io
+open http://hello.default.127.0.0.1.nip.io
 ```
 
 # Install Docker for Desktop
@@ -40,7 +40,7 @@ Create the cluster using a configuration file
 The process should take about 60 seconds if you already have the images cached and should look like this
 ```
 Creating cluster "knative" ...
- ✓ Ensuring node image (kindest/node:v1.15.0) 🖼 
+ ✓ Ensuring node image (kindest/node:v1.16.1) 🖼 
  ✓ Preparing nodes 📦 
  ✓ Creating kubeadm config 📜 
  ✓ Starting control-plane 🕹️ 
@@ -63,7 +63,7 @@ Run the following script
 ## Install full Istio
 Only if you skipped istio lean and are planning to use traffic splitting that requires istio sidecards
 ```
-./2a-install-istio-full.sh
+./2b-install-istio-full.sh
 ```
 # Install Knative Serving
 
@@ -74,7 +74,7 @@ Run the following script
 
 Try to invoke the knative function
 ```
-curl http://hello.default.127.0.0.1.xip.io
+curl http://hello.default.127.0.0.1.nip.io
 ```
 
 # Install Knative Eventing
