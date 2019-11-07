@@ -1,9 +1,9 @@
 Setup Knative on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
 
 # TLDR
-Install `kind` and `docker` configured with 4 CPUs and 8GB Mem.
+Install `kind` and `docker` configured with 6 CPUs and 8GB Mem. Take into account the services will not actually use that much CPU or Memory
 ```
-./1-create-kind-cluster.sh 
+./1-create-kind-cluster.sh
 ./2-install-istio-lean.sh
 ./3-install-knative-serving.sh
 open http://hello.default.127.0.0.1.nip.io
@@ -12,9 +12,8 @@ open http://hello.default.127.0.0.1.nip.io
 # Install Docker for Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
-You need to increase the default CPU and Memory configuration in docker, go to preferences and increase it to 6 CPU (4 CPUs if only using istio-lean) and 8GB memory
 
-Verify that docker engine and cli is working: 
+Verify that docker engine and cli is working:
 ```
 docker version
 ```
@@ -35,17 +34,17 @@ kind version
 
 Create the cluster using a configuration file
 ```
-./1-create-kind-cluster.sh 
+./1-create-kind-cluster.sh
 ```
 The process should take about 60 seconds if you already have the images cached and should look like this
 ```
 Creating cluster "knative" ...
- ✓ Ensuring node image (kindest/node:v1.16.1) 🖼 
- ✓ Preparing nodes 📦 
- ✓ Creating kubeadm config 📜 
- ✓ Starting control-plane 🕹️ 
- ✓ Installing CNI 🔌 
- ✓ Installing StorageClass 💾 
+ ✓ Ensuring node image (kindest/node:v1.16.1) 🖼
+ ✓ Preparing nodes 📦
+ ✓ Creating kubeadm config 📜
+ ✓ Starting control-plane 🕹️
+ ✓ Installing CNI 🔌
+ ✓ Installing StorageClass 💾
 Cluster creation complete. You can now use the cluster with:
 export KUBECONFIG="$(kind get kubeconfig-path --name="knative")"
 kubectl cluster-info
@@ -53,7 +52,7 @@ kubectl cluster-info
 
 # Install Istio
 
-## Install lean Istio 
+## Install lean Istio
 
 Run the following script
 ```
