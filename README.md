@@ -1,9 +1,9 @@
 # Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
 
->Updated and verified on 2020/07/18 with:
->- Knative version 0.16
+>Updated and verified on 2020/09/04 with:
+>- Knative version 0.17.2
 >- Kind version 0.8.1
->- Kubernetes version 1.18.2
+>- Kubernetes version 1.19.0
 
 
 ## Install Docker for Desktop
@@ -27,7 +27,7 @@ docker version
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.18.2@sha256:7b27a6d0f2517ff88ba444025beae41491b016bc6af573ba467b70c5e8e0d85f
+      image: kindest/node:v1.19.0@sha256:3b0289b2d1bab2cb9108645a006939d2f447a10ad2bb21919c332d06b548bbc6
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -43,16 +43,31 @@ docker version
 
 ## Install Knative Serving
 
+1. Select the version of Knative Serving to install
+    ```bash
+    export KNATIVE_VERSION="0.17.2"
+    ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
-    kubectl apply -f https://github.com/knative/serving/releases/download/v0.16.0/serving-crds.yaml
-    kubectl apply -f https://github.com/knative/serving/releases/download/v0.16.0/serving-core.yaml
-    kubectl wait deployment activator autoscaler controller webhook --for=condition=Available -n knative-serving 
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
+
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
+
+    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
     ```
+1. Select the version of Knative Net Kurier to install
+    ```bash
+    export KNATIVE_NET_KOURIER_VERSION="0.17.0"
+    ```
+
 1. Install Knative Layer kourier in namespace `kourier-system`
-    ```
-    kubectl apply -f https://github.com/knative/net-kourier/releases/download/v0.16.0/kourier.yaml
-    kubectl wait deployment 3scale-kourier-control 3scale-kourier-gateway --for=condition=Available -n kourier-system 
+    ```bash
+    kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
+
+    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n kourier-system
+
+    # deployment for net-kourier gets deployed to namespace knative-serving
+    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
     ```
 1. Set the environment variable `EXTERNAL_IP` to External IP Address of the Worker Node
     ```bash
@@ -110,7 +125,6 @@ docker version
 ## Deploy Knative Application
 
 Deploy a Knative Service using the following yaml manifest:
-
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: serving.knative.dev/v1
@@ -130,26 +144,25 @@ spec:
 EOF
 ```
 
-
-
-Verify status of Knative Service until is Ready
+**Optional** Deploy using [kn](https://github.com/knative/client)
 ```bash
-kubectl get ksvc -w
+kn service create hello --port 8080 --image gcr.io/knative-samples/helloworld-go
 ```
 
-Wait util column `READY` is `True` it might take a minute or two:
-```
-NAME    URL                                        LATESTCREATED   LATESTREADY   READY     REASON
-hello   http://hello.default.10.107.1.152.nip.io   hello-r4vz7                   Unknown   RevisionMissing
-hello   http://hello.default.10.107.1.152.nip.io   hello-r4vz7     hello-r4vz7   Unknown   RevisionMissing
-hello   http://hello.default.10.107.1.152.nip.io   hello-r4vz7     hello-r4vz7   Unknown   IngressNotConfigured
-hello   http://hello.default.10.107.1.152.nip.io   hello-r4vz7     hello-r4vz7   True  
+Wait for Knative Service to be Ready
+```bash
+kubectl wait ksvc hello --all --timeout=-1s --for=condition=Ready
 ```
 
+Get the URL of the new Service
+```bash
+SERVICE_URL=$(kubectl get ksvc hello -o jsonpath='{.status.url}')
+echo $SERVICE_URL
+```
 
 Test the App
 ```bash
-curl $(kubectl get ksvc hello -o jsonpath='{.status.url}')
+curl $SERVICE_URL
 ```
 
 Output should be:
@@ -168,9 +181,9 @@ NAME                                     READY   STATUS    RESTARTS   AGE
 hello-r4vz7-deployment-c5d4b88f7-ks95l   2/2     Running   0          7s
 ```
 
-Try the service `url` on your browser
-```
-open $(kubectl get ksvc hello -o jsonpath='{.status.url}')
+Try the service `url` on your browser (command works on linux and macos)
+```bash
+open $SERVICE_URL
 ```
 
 You can watch the pods and see how they scale down to zero after http traffic stops to the url
@@ -187,7 +200,7 @@ hello-r4vz7-deployment-c5d4b88f7-ks95l   1/2     Terminating
 hello-r4vz7-deployment-c5d4b88f7-ks95l   0/2     Terminating
 ```
 
-Try to access the url again, and you will see the new pods running again.
+Try to access the url again, and you will see a new pod running again.
 ```
 NAME                                     READY   STATUS
 hello-r4vz7-deployment-c5d4b88f7-rr8cd   0/2     Pending
@@ -204,5 +217,4 @@ Delete the cluster `knative`
 ```
 kind delete cluster --name knative
 ```
-
 If you have any issues with this instructions [open an new issue](https://github.com/csantanapr/knative-kind/issues/new) please 🙏🏻
