@@ -1,9 +1,11 @@
-# Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
+# Setup Knative on Kind
 
->Updated and verified on 2020/09/04 with:
->- Knative version 0.17.2
->- Kind version 0.8.1
->- Kubernetes version 1.19.0
+Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
+
+>Updated and verified on 2020/11/02 with:
+>- Knative version 0.18.1
+>- Kind version 0.9.0
+>- Kubernetes version 1.19.1
 
 
 ## Install Docker for Desktop
@@ -17,7 +19,7 @@ docker version
 
 ## Create cluster with Kind
 
-1. Install [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) Linux, MacOS, or Windows. You can verify version with
+1. Install or Upgrade [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) Linux, MacOS, or Windows. You can verify version with
     ```bash
     kind --version
     ```
@@ -27,25 +29,33 @@ docker version
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.19.0@sha256:3b0289b2d1bab2cb9108645a006939d2f447a10ad2bb21919c332d06b548bbc6
+      image: kindest/node:v1.19.1
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
     ```
-1. Create and start your cluster, we specify the config file above
+1. Create and start your cluster, we specify the config file above.
     ```
     kind create cluster --name knative --config kind/clusterconfig.yaml
+    ```
+    If you already have a cluster with the name `knative` you need to delete it first
+    ```
+    kind delete cluster --name knative
     ```
 1. Verify the versions of the client `kubectl` and the cluster api-server, and that you can connect to your cluster.
     ```bash
     kubectl cluster-info --context kind-knative
     ```
 
+For more information installing or using kind checkout the docs https://kind.sigs.k8s.io/
+
 ## Install Knative Serving
+
+TLDR; `./demo.sh`
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.17.2"
+    export KNATIVE_VERSION="0.18.1"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
@@ -57,7 +67,7 @@ docker version
     ```
 1. Select the version of Knative Net Kurier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.17.0"
+    export KNATIVE_NET_KOURIER_VERSION="0.18.0"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
@@ -118,13 +128,21 @@ docker version
     ```bash
     kubectl get pods -n knative-serving
     kubectl get pods -n kourier-system
-    kubectl get svc  -n kourier-system kourier-ingress
+    kubectl get svc  -n kourier-ingress
     ```
 
 
 ## Deploy Knative Application
 
-Deploy a Knative Service using the following yaml manifest:
+Deploy using [kn](https://github.com/knative/client)
+```bash
+kn service create hello \
+--image gcr.io/knative-samples/helloworld-go \
+--port 8080 \
+--env TARGET=Knative
+```
+
+**Optional:** Deploy a Knative Service using the equivalent yaml manifest:
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: serving.knative.dev/v1
@@ -142,11 +160,6 @@ spec:
             - name: TARGET
               value: "Knative"
 EOF
-```
-
-**Optional** Deploy using [kn](https://github.com/knative/client)
-```bash
-kn service create hello --port 8080 --image gcr.io/knative-samples/helloworld-go
 ```
 
 Wait for Knative Service to be Ready

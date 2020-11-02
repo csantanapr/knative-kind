@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -ex
-KNATIVE_VERSION=${KNATIVE_VERSION:-0.17.2}
-KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.17.0}
+KNATIVE_VERSION=${KNATIVE_VERSION:-0.18.1}
+KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.18.0}
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
 kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
