@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -ex
 KNATIVE_VERSION=${KNATIVE_VERSION:-0.18.1}
