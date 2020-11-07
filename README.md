@@ -38,7 +38,9 @@ docker version
 1. Delete and create, start your cluster, we specify the config file above.
     ```
     kind delete cluster --name knative || true
-    kind create cluster --name knative --config kind/clusterconfig.yaml
+    KIND_CLUSTER=$(mktemp)
+    curl -sLo $KIND_CLUSTER https://raw.githubusercontent.com/csantanapr/knative-kind/master/kind/clusterconfig.yaml
+    kind create cluster --name knative --config $KIND_CLUSTER
     ```
 1. Verify the versions of the client `kubectl` and the cluster api-server, and that you can connect to your cluster.
     ```bash
