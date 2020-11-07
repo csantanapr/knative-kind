@@ -6,13 +6,10 @@ NAMESPACE=${NAMESPACE:-default}
 
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
-sleep 3
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml
-sleep 3
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml
-sleep 3
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
 kubectl apply -f - <<EOF
