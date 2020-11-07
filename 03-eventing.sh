@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.18.4}
 NAMESPACE=${NAMESPACE:-default}
 

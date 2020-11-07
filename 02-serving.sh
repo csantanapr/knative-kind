@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 KNATIVE_VERSION=${KNATIVE_VERSION:-0.18.1}
 KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.18.0}
@@ -9,7 +9,7 @@ KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
 
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
-sleep 3
+sleep 5
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving
 kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
 sleep 3
