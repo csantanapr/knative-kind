@@ -231,16 +231,21 @@ Some people call this **Serverless** 🎉 🌮 🔥
 
 ## Install Knative Eventing
 
-```bash
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/eventing-crds.yaml
+1. Select the version of Knative Eventing to install
+    ```bash
+    export KNATIVE_EVENTING_VERSION="0.18.4"
+    ```
+1. Install Knative Eventing in namespace `knative-eventing`
+    ```bash
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
 
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/eventing-core.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
 
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/mt-channel-broker.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml
 
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+    kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
-```
+    ```
 
 - Configure InMemoryChannel
 ```yaml
