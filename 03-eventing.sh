@@ -95,6 +95,7 @@ spec:
     terminationMessagePolicy: File
     tty: true
 EOF
+kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready
 
 kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
   -X POST \
