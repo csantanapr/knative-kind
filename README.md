@@ -2,7 +2,9 @@
 
 Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
 
->Updated and verified on 2020/11/6 with:
+TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/demo.sh | sh`
+
+>Updated and verified on 2020/11/7 with:
 >- Knative Serving 0.18.2
 >- Knative Eventing 0.18.4
 >- Kind version 0.9.0
@@ -19,6 +21,8 @@ docker version
 
 
 ## Create cluster with Kind
+
+TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | sh`
 
 1. Install or Upgrade [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) Linux, MacOS, or Windows. You can verify version with
     ```bash
@@ -51,7 +55,7 @@ For more information installing or using kind checkout the docs https://kind.sig
 
 ## Install Knative Serving
 
-TLDR; `./demo.sh`
+TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | sh`
 
 1. Select the version of Knative Serving to install
     ```bash
@@ -225,14 +229,17 @@ hello-r4vz7-deployment-c5d4b88f7-rr8cd   2/2     Running
 Some people call this **Serverless** 🎉 🌮 🔥
 
 
-### Install Knative Eventing
+## Install Knative Eventing
 
 ```bash
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/eventing-crds.yaml
 
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/eventing-core.yaml
 
-ubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/mt-channel-broker.yaml
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v0.18.4/mt-channel-broker.yaml
+
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+
 ```
 
 - Configure InMemoryChannel
@@ -272,9 +279,15 @@ EOF
 
 ```
 
+## Deploy Knative Eventing sample
+
+Set the example Namspace
+```bash
+NAMESPACE=default
+```
+
 - Create a broker
 ```yaml
-NAMESPACE=default
 kubectl create -f - <<EOF
 apiVersion: eventing.knative.dev/v1
 kind: broker
@@ -286,7 +299,6 @@ EOF
 
 - Verify broker
 ```bash
-NAMESPACE=default
 kubectl -n $NAMESPACE get broker default
 ```
 
@@ -298,7 +310,6 @@ default   http://broker-ingress.knative-eventing.svc.cluster.local/default/defau
 
 - To deploy the `hello-display` consumer to your cluster, run the following command:
 ```yaml
-NAMESPACE=default
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: apps/v1
 kind: Deployment
@@ -336,7 +347,6 @@ EOF
 
 Create a trigger by entering the following command:
 ```yaml
-NAMESPACE=default
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
@@ -358,7 +368,6 @@ EOF
 
 Create ` curl` Pod
 ```yaml
-NAMESPACE=deafult
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: v1
 kind: Pod
@@ -383,13 +392,11 @@ EOF
 
 shell into the pod by running the following command:
 ```bash
-NAMESPACE=deafult
 kubectl -n $NAMESPACE attach curl -it
 ```
 
 Send a Cloud Event usnig `curl`
 ```bash
-NAMESPACE=default
 curl -v "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
   -X POST \
   -H "Ce-Id: say-hello" \
@@ -402,7 +409,6 @@ curl -v "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/def
 
 Verifi the events were received
 ```bash
-NAMESPACE=default
 kubectl -n $NAMESPACE logs -l app=hello-display --tail=100
 ```
 
