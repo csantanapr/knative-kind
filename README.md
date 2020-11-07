@@ -14,7 +14,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 ## Install Docker for Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
-Verify that docker engine and cli is working:
+Verify that docker engine and CLI is working:
 ```
 docker version
 ```
@@ -28,7 +28,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```bash
     kind --version
     ```
-1. A kind cluster manifest file [clusterconfig.yaml](./kind/clusterconfig.yaml) is already provided, you can customize it. We are exposing port `80` on they host to be later use by the Knative Kourier ingress. To use a different version of kubernetes check the image digest to use from the kind [release page](https://github.com/kubernetes-sigs/kind/releases)
+1. A kind cluster manifest file [clusterconfig.yaml](./kind/clusterconfig.yaml) is already provided, you can customize it. We are exposing port `80` on the host to be later used by the Knative Kourier ingress. To use a different version of kubernetes check the image digest to use from the kind [release page](https://github.com/kubernetes-sigs/kind/releases)
     ```yaml
     kind: Cluster
     apiVersion: kind.x-k8s.io/v1alpha4
@@ -36,7 +36,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     - role: control-plane
       image: kindest/node:v1.19.1
       extraPortMappings:
-      - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
+      - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be used by kourier ingress
         hostPort: 80
     ```
 1. Delete and create, start your cluster, we specify the config file above.
@@ -92,7 +92,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     KNATIVE_DOMAIN="$EXTERNAL_IP.nip.io"
     echo KNATIVE_DOMAIN=$KNATIVE_DOMAIN
     ```
-    Double check DNS is resolving
+    Double-check DNS is resolving
     ```bash
     dig $KNATIVE_DOMAIN
     ```
@@ -182,7 +182,7 @@ Test the App
 curl $SERVICE_URL
 ```
 
-Output should be:
+The output should be:
 ```
 Hello Knative!
 ```
@@ -192,7 +192,7 @@ Check the knative pods that scaled from zero
 kubectl get pod -l serving.knative.dev/service=hello
 ```
 
-Output should be:
+The output should be:
 ```
 NAME                                     READY   STATUS    RESTARTS   AGE
 hello-r4vz7-deployment-c5d4b88f7-ks95l   2/2     Running   0          7s
@@ -208,7 +208,7 @@ You can watch the pods and see how they scale down to zero after http traffic st
 kubectl get pod -l serving.knative.dev/service=hello -w
 ```
 
-Output should look like this:
+The output should look like this:
 ```
 NAME                                     READY   STATUS
 hello-r4vz7-deployment-c5d4b88f7-ks95l   2/2     Running
@@ -366,12 +366,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     ```
 
-- shell into the pod by running the following command:
-    ```bash
-    kubectl -n $NAMESPACE attach curl -it
-    ```
-
-- Send a Cloud Event usnig `curl`
+- Send a Cloud Event usnig `curl` pod created in the previous step.
     ```bash
     kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
       -X POST \
@@ -383,7 +378,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
       -d '{"msg":"Hello Knative!"}'
     ```
 
-- Verifi the events were received
+- Verify the events were received
     ```bash
     kubectl -n $NAMESPACE logs -l app=hello-display --tail=100
     ```
@@ -412,5 +407,5 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```
     kind delete cluster --name knative
     ```
-If you have any issues with this instructions [open an new issue](https://github.com/csantanapr/knative-kind/issues/new) please 🙏🏻
+If you have any issues with these instructions [open an new issue](https://github.com/csantanapr/knative-kind/issues/new) please 🙏🏻
 
