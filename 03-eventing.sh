@@ -1,44 +1,21 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.18.4}
+NAMESPACE=${NAMESPACE:-default}
+
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
+sleep 1
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml
+sleep 1
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml
+sleep 1
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
-kubectl create -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: imc-channel
-  namespace: knative-eventing
-data:
-  channelTemplateSpec: |
-    apiVersion: messaging.knative.dev/v1
-    kind: InMemoryChannel
-EOF
-
 kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-br-defaults
-  namespace: knative-eventing
-data:
-  default-br-config: |
-    # This is the cluster-wide default broker channel.
-    clusterDefault:
-      brokerClass: MTChannelBasedBroker
-      apiVersion: v1
-      kind: ConfigMap
-      name: imc-channel
-      namespace: knative-eventing
-EOF
-
-NAMESPACE=default
-
-kubectl create -f - <<EOF
 apiVersion: eventing.knative.dev/v1
 kind: broker
 metadata:
@@ -46,6 +23,7 @@ metadata:
  namespace: $NAMESPACE
 EOF
 
+sleep 3
 kubectl -n $NAMESPACE get broker default
 
 kubectl -n $NAMESPACE apply -f - << EOF
@@ -117,4 +95,15 @@ spec:
     terminationMessagePolicy: File
     tty: true
 EOF
+
+kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
+  -X POST \
+  -H "Ce-Id: say-hello" \
+  -H "Ce-Specversion: 1.0" \
+  -H "Ce-Type: greeting" \
+  -H "Ce-Source: not-sendoff" \
+  -H "Content-Type: application/json" \
+  -d '{"msg":"Hello Knative!"}'
+
+kubectl -n $NAMESPACE logs -l app=hello-display --tail=100
 

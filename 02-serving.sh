@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 KNATIVE_VERSION=${KNATIVE_VERSION:-0.18.1}
 KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.18.0}
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
+sleep 1
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving
 kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
+sleep 1
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system
 # deployment for net-kourier gets deployed to namespace knative-serving
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving
