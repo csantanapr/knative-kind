@@ -2,8 +2,19 @@
 
 set -e
 
+kindVersion=$(kind version);
+
+if [[ $kindVersion =~ "v0.9.0" ]]
+then
+   echo "KinD version is ${kindVersion}"
+else
+  echo "Please make sure you are using KinD v0.9.0 or update the node_image"
+  exit 0
+fi
+
 REPLY=continue
-if kubectl cluster-info --context kind-knative &>/dev/null; then
+KIND_EXIST="$(kind get clusters -q | grep knative || true)"
+if [[ ${KIND_EXIST} ]] ; then
  read -p "Knative Cluster kind-knative already installed, delete and re-create? N/y: " REPLY </dev/tty
 fi
 if [ "$REPLY" == "Y" ] || [ "$REPLY" == "y" ]; then
@@ -14,10 +25,18 @@ elif [ "$REPLY" == "N" ] || [ "$REPLY" == "n" ] || [ -z "$REPLY" ]; then
 fi
 
 KIND_CLUSTER=$(mktemp)
-curl -sLo $KIND_CLUSTER https://raw.githubusercontent.com/csantanapr/knative-kind/master/kind/clusterconfig.yaml
-kind create cluster --name knative --config $KIND_CLUSTER
-kubectl cluster-info --context kind-knative
+cat <<EOF | kind create cluster --name knative --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  image: kindest/node:v1.19.1
+  extraPortMappings:
+  - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
+    hostPort: 80
+EOF
 echo "Waiting on cluster to be ready"
+sleep 10
 until kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system
 do
    kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system

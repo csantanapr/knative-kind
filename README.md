@@ -4,7 +4,7 @@ Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kuber
 
 TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/demo.sh | sh`
 
->Updated and verified on 2020/11/7 with:
+>Updated and verified on 2020/11/9 with:
 >- Knative Serving 0.18.2
 >- Knative Eventing 0.18.4
 >- Kind version 0.9.0
@@ -28,23 +28,21 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```bash
     kind --version
     ```
-1. A kind cluster manifest file [clusterconfig.yaml](./kind/clusterconfig.yaml) is already provided, you can customize it. We are exposing port `80` on the host to be later used by the Knative Kourier ingress. To use a different version of kubernetes check the image digest to use from the kind [release page](https://github.com/kubernetes-sigs/kind/releases)
+1. Delete and create, start your cluster, we specify the config file above.A kind cluster config manifest is used to expose port `80` on the host to be later used by the Knative Kourier ingress. To use a different version of kubernetes check the image digest to use from the kind [release page](https://github.com/kubernetes-sigs/kind/releases)
+    ```
+    kind delete cluster --name knative || true
+    ```
     ```yaml
+    cat <<EOF | kind create cluster --name knative --config=-
     kind: Cluster
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
       image: kindest/node:v1.19.1
       extraPortMappings:
-      - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be used by kourier ingress
+      - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
-    ```
-1. Delete and create, start your cluster, we specify the config file above.
-    ```
-    kind delete cluster --name knative || true
-    KIND_CLUSTER=$(mktemp)
-    curl -sLo $KIND_CLUSTER https://raw.githubusercontent.com/csantanapr/knative-kind/master/kind/clusterconfig.yaml
-    kind create cluster --name knative --config $KIND_CLUSTER
+    EOF
     ```
 1. Verify the versions of the client `kubectl` and the cluster api-server, and that you can connect to your cluster.
     ```bash
