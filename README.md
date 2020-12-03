@@ -130,7 +130,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```bash
     kubectl get pods -n knative-serving
     kubectl get pods -n kourier-system
-    kubectl get svc  -n kourier-ingress
+    kubectl get svc  -n kourier-system
     ```
 
 
