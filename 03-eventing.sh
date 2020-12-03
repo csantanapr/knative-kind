@@ -1,16 +1,44 @@
 #!/usr/bin/env bash
 
-set -e
-KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.18.4}
-NAMESPACE=${NAMESPACE:-default}
+set -eo pipefail
 
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
+KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.19.2}
+NAMESPACE=${NAMESPACE:-default}
+set -u
+
+
+n=0
+until [ $n -ge 2 ]; do
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml && break
+  n=$[$n+1]
+  sleep 5
+done
+kubectl wait --for=condition=Established --all crd
+
+n=0
+until [ $n -ge 2 ]; do
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml && break
+  n=$[$n+1]
+  sleep 5
+done
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml
+
+n=0
+until [ $n -ge 2 ]; do
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml && break
+  n=$[$n+1]
+  sleep 5
+done
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
-kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml
+
+n=0
+until [ $n -ge 2 ]; do
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml && break
+  n=$[$n+1]
+  sleep 5
+done
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+
 
 kubectl apply -f - <<EOF
 apiVersion: eventing.knative.dev/v1
@@ -68,9 +96,9 @@ spec:
       type: greeting
   subscriber:
     ref:
-     apiVersion: v1
-     kind: Service
-     name: hello-display
+      apiVersion: v1
+      kind: Service
+      name: hello-display
 EOF
 
 kubectl -n $NAMESPACE apply -f - << EOF
@@ -86,10 +114,6 @@ spec:
   - image: radial/busyboxplus:curl
     imagePullPolicy: IfNotPresent
     name: curl
-    resources: {}
-    stdin: true
-    terminationMessagePath: /dev/termination-log
-    terminationMessagePolicy: File
     tty: true
 EOF
 kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready

@@ -4,11 +4,12 @@ Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kuber
 
 TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/demo.sh | sh`
 
->Updated and verified on 2020/11/9 with:
->- Knative Serving 0.18.2
->- Knative Eventing 0.18.4
+>Updated and verified on 2020/12/03 with:
+>- Knative Serving 0.19.0
+>- Knative Kourier 0.19.1
+>- Knative Eventing 0.19.2
 >- Kind version 0.9.0
->- Kubernetes version 1.19.1
+>- Kubernetes version 1.19.4
 
 
 ## Install Docker for Desktop
@@ -38,7 +39,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.19.1
+      image: kindest/node:v1.19.4
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -57,11 +58,12 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.18.1"
+    export KNATIVE_VERSION="0.19.0"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
     kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
+    kubectl wait --for=condition=Established --all crd
 
     kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
 
@@ -69,12 +71,13 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```
 1. Select the version of Knative Net Kurier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.18.0"
+    export KNATIVE_NET_KOURIER_VERSION="0.19.1"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
     ```bash
     kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
+    kubectl wait --for=condition=Established --all crd
 
     kubectl wait deployment --all --timeout=-1s --for=condition=Available -n kourier-system
 
@@ -233,11 +236,12 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Eventing to install
     ```bash
-    export KNATIVE_EVENTING_VERSION="0.18.4"
+    export KNATIVE_EVENTING_VERSION="0.19.2"
     ```
 1. Install Knative Eventing in namespace `knative-eventing`
     ```bash
     kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
+    kubectl wait --for=condition=Established --all crd
 
     kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
 
@@ -333,9 +337,9 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
           type: greeting
       subscriber:
         ref:
-        apiVersion: v1
-        kind: Service
-        name: hello-display
+          apiVersion: v1
+          kind: Service
+          name: hello-display
     EOF
 
     ```
