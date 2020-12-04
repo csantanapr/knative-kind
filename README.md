@@ -362,10 +362,6 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
       - image: radial/busyboxplus:curl
         imagePullPolicy: IfNotPresent
         name: curl
-        resources: {}
-        stdin: true
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         tty: true
     EOF
 
