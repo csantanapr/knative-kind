@@ -1,8 +1,11 @@
 # Setup Knative on Kind
 
-Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/) (Kubernetes In Docker)
+Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
-TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/demo.sh | sh`
+TLDR;
+```bash
+curl -sL knative.csantanapr.dev | bash
+```
 
 >Updated and verified on 2020/12/03 with:
 >- Knative Serving 0.19.0

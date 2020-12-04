@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
+
+echo -e "\033[0;92m 🍿 Knative starting... \033[0m"
 STARTTIME=$(date +%s)
-curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | sh
-curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | sh
-curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/03-eventing.sh | sh
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/03-eventing.sh | bash
 DURATION=$(($(date +%s) - $STARTTIME))
 echo "kubectl get ksvc,broker,trigger"
 kubectl -n default get ksvc,broker,trigger
