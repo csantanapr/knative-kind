@@ -7,12 +7,12 @@ TLDR;
 curl -sL knative.csantanapr.dev | bash
 ```
 
->Updated and verified on 2020/12/03 with:
+>Updated and verified on 2020/12/09 with:
 >- Knative Serving 0.19.0
 >- Knative Kourier 0.19.1
 >- Knative Eventing 0.19.2
 >- Kind version 0.9.0
->- Kubernetes version 1.19.4
+>- Kubernetes version 1.20.0
 
 
 ## Install Docker for Desktop
@@ -42,7 +42,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.19.4
+      image: kindest/node:v1.20.0
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
