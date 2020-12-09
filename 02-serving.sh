@@ -81,5 +81,5 @@ spec:
 EOF
 kubectl wait ksvc hello --all --timeout=-1s --for=condition=Ready
 SERVICE_URL=$(kubectl get ksvc hello -o jsonpath='{.status.url}')
-echo "The SERVICE_URL is $SERVICE_URL"
+echo "The Knative Service hello endpoint is $SERVICE_URL"
 curl $SERVICE_URL
