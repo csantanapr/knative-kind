@@ -72,7 +72,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
     ```
-1. Select the version of Knative Net Kurier to install
+1. Select the version of Knative Net Kourier to install
     ```bash
     export KNATIVE_NET_KOURIER_VERSION="0.19.1"
     ```
