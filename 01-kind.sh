@@ -3,7 +3,7 @@
 set -eo pipefail
 
 kindVersion=$(kind version);
-K8S_VERSION=${k8sVersion:-v1.20.0}
+K8S_VERSION=${k8sVersion:-v1.20.2}
 
 if [[ $kindVersion =~ "v0.9." ]]
 then
