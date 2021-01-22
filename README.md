@@ -7,12 +7,12 @@ TLDR;
 curl -sL knative.csantanapr.dev | bash
 ```
 
->Updated and verified on 2020/12/09 with:
->- Knative Serving 0.19.0
->- Knative Kourier 0.19.1
->- Knative Eventing 0.19.2
+>Updated and verified on 2020/01/22 with:
+>- Knative Serving 0.20.0
+>- Knative Kourier 0.20.0
+>- Knative Eventing 0.20.1
 >- Kind version 0.9.0
->- Kubernetes version 1.20.0
+>- Kubernetes version 1.20.2
 
 
 ## Install Docker for Desktop
@@ -42,7 +42,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.20.0
+      image: kindest/node:v1.20.2
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -61,7 +61,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.19.0"
+    export KNATIVE_VERSION="0.20.0"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
@@ -74,7 +74,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     ```
 1. Select the version of Knative Net Kourier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.19.1"
+    export KNATIVE_NET_KOURIER_VERSION="0.20.0"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
@@ -239,7 +239,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Eventing to install
     ```bash
-    export KNATIVE_EVENTING_VERSION="0.19.2"
+    export KNATIVE_EVENTING_VERSION="0.20.1"
     ```
 1. Install Knative Eventing in namespace `knative-eventing`
     ```bash
