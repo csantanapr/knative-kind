@@ -1,10 +1,10 @@
-# Setup Knative on Kind
+# Knative on Kind (KonK)
 
 Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
 TLDR;
 ```bash
-curl -sL knative.csantanapr.dev | bash
+curl -sL get.konk.dev | bash
 ```
 
 >Updated and verified on 2021/01/23 with:
