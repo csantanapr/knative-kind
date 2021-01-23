@@ -7,11 +7,11 @@ TLDR;
 curl -sL knative.csantanapr.dev | bash
 ```
 
->Updated and verified on 2020/01/22 with:
+>Updated and verified on 2021/01/23 with:
 >- Knative Serving 0.20.0
 >- Knative Kourier 0.20.0
 >- Knative Eventing 0.20.1
->- Kind version 0.9.0
+>- Kind version 0.10.0
 >- Kubernetes version 1.20.2
 
 
@@ -28,7 +28,7 @@ docker version
 
 TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | sh`
 
-1. Install or Upgrade [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) Linux, MacOS, or Windows. You can verify version with
+1. Install or Upgrade [kind](https://github.com/kubernetes-sigs/kind/releases) Linux, MacOS, or Windows. Download kind binary and verify the version with
     ```bash
     kind --version
     ```
@@ -42,7 +42,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.20.2
+      image: kindest/node:v1.20.2@sha256:8f7ea6e7642c0da54f04a7ee10431549c0257315b3a634f6ef2fecaaedb19bab
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80

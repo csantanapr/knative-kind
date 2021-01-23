@@ -3,14 +3,14 @@
 set -eo pipefail
 
 kindVersion=$(kind version);
-K8S_VERSION=${k8sVersion:-v1.20.2}
+K8S_VERSION=${k8sVersion:-v1.20.2@sha256:8f7ea6e7642c0da54f04a7ee10431549c0257315b3a634f6ef2fecaaedb19bab}
 
-if [[ $kindVersion =~ "v0.9." ]]
+if [[ $kindVersion =~ "v0.10." ]]
 then
    echo "KinD version is ${kindVersion}"
 else
-  echo "Please make sure you are using KinD v0.9.0 or update the node_image"
-  exit 0
+  echo "Please make sure you are using KinD v0.10.x, download from https://github.com/kubernetes-sigs/kind/releases"
+  exit 1
 fi
 
 REPLY=continue
