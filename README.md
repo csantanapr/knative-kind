@@ -7,7 +7,7 @@ TLDR;
 curl -sL get.konk.dev | bash
 ```
 
->Updated and verified on 2021/01/23 with:
+>Updated and verified on 2021/03/15 with:
 >- Knative Serving 0.21.0
 >- Knative Kourier 0.21.0
 >- Knative Eventing 0.21.1
