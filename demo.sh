@@ -6,7 +6,9 @@ echo -e "\033[0;92m 🍿 Knative starting... \033[0m"
 STARTTIME=$(date +%s)
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | bash
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | bash
-curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/03-eventing.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/03-serving-samples.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/04-eventing.sh | bash
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/05-eventing-samples.sh | bash
 DURATION=$(($(date +%s) - $STARTTIME))
 echo "kubectl get ksvc,broker,trigger"
 kubectl -n default get ksvc,broker,trigger
