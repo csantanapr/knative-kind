@@ -12,10 +12,8 @@ if [[ ! $kindVersion =~ "v0.10." ]]; then
   if [ "$REPLYKIND" == "Y" ] || [ "$REPLYKIND" == "y" ] || [ -z "$REPLYKIND" ]; then
     echo "You are very brave..."
     sleep 1
-    exit 0
   elif [ "$REPLYKIND" == "N" ] || [ "$REPLYKIND" == "n" ]; then
     echo "Installation stopped, please upgrade kind and run again"
-    exit 0
   fi
 fi
 
