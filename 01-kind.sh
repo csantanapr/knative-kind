@@ -5,12 +5,16 @@ set -eo pipefail
 kindVersion=$(kind version);
 K8S_VERSION=${k8sVersion:-v1.20.2@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7}
 
-if [[ $kindVersion =~ "v0.10." ]]
-then
-   echo "KinD version is ${kindVersion}"
-else
-  echo "Please make sure you are using KinD v0.10.x, download from https://github.com/kubernetes-sigs/kind/releases"
-  exit 1
+echo "KinD version is ${kindVersion}"
+if [[ ! $kindVersion =~ "v0.10." ]]; then
+  echo "WARNING: Please make sure you are using KinD version v0.10.x, download from https://github.com/kubernetes-sigs/kind/releases"
+  read -p "Do you want to continue on your own risk? Y/n: " REPLYKIND </dev/tty
+  if [ "$REPLYKIND" == "Y" ] || [ "$REPLYKIND" == "y" ] || [ -z "$REPLYKIND" ]; then
+    echo "You are very brave..."
+    sleep 1
+  elif [ "$REPLYKIND" == "N" ] || [ "$REPLYKIND" == "n" ]; then
+    echo "Installation stopped, please upgrade kind and run again"
+  fi
 fi
 
 REPLY=continue
