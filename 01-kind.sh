@@ -11,9 +11,10 @@ if [[ ! $kindVersion =~ "v0.10." ]]; then
   read -p "Do you want to continue on your own risk? Y/n: " REPLYKIND </dev/tty
   if [ "$REPLYKIND" == "Y" ] || [ "$REPLYKIND" == "y" ] || [ -z "$REPLYKIND" ]; then
     echo "You are very brave..."
-    sleep 1
+    sleep 2
   elif [ "$REPLYKIND" == "N" ] || [ "$REPLYKIND" == "n" ]; then
     echo "Installation stopped, please upgrade kind and run again"
+    exit 0
   fi
 fi
 
