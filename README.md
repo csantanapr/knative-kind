@@ -7,6 +7,8 @@ TLDR;
 curl -sL get.konk.dev | bash
 ```
 
+If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
+
 >Updated and verified on 2021/03/15 with:
 >- Knative Serving 0.21.0
 >- Knative Kourier 0.21.0
