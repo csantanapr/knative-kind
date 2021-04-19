@@ -55,6 +55,8 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 For more information installing or using kind checkout the docs https://kind.sigs.k8s.io/
 
+> **Note:** You can optionally specify a `kind` cluster name by setting the environment variable `KIND_CLUSTER_NAME`.
+
 ## Install Knative Serving
 
 TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | sh`
