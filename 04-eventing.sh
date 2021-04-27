@@ -3,7 +3,7 @@
 set -eo pipefail
 
 KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.21.1}
-NAMESPACE=${NAMESPACE:-default}
+NAMESPACE=${NAMESPACE:-knative-tutorial}
 set -u
 
 
@@ -44,7 +44,7 @@ kubectl apply -f - <<EOF
 apiVersion: eventing.knative.dev/v1
 kind: broker
 metadata:
- name: default
+ name: example-broker
  namespace: $NAMESPACE
 EOF
 
