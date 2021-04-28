@@ -2,6 +2,9 @@
 
 Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
+
+Please refer and complete the tasks specified the "Install Docker for Desktop" section before executing the command below
+
 TLDR;
 ```bash
 curl -sL get.konk.dev | bash
@@ -20,11 +23,21 @@ If you only need the install without the sample apps then use `curl -sL install.
 ## Install Docker for Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
-Verify that docker engine and CLI is working:
-```
-docker version
+Docker post installation configuration to run docker commands as non-root logged in user without sudo 
+Note: Make sure group called "docker" exists on the vm/bare-metal compute instance prior to adding user to docker group
+```bash
+sudo usermod -aG docker $USER
 ```
 
+Refresh docker group membership of logged in non-root user
+```bash
+newgrp docker
+```
+
+Verify that docker engine and CLI is working without sudo:
+```bash
+docker version
+```
 
 ## Create cluster with Kind
 
