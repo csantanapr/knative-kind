@@ -4,7 +4,7 @@ set -eo pipefail
 
 KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.21.1}
 NAMESPACE=${NAMESPACE:-default}
-BROKER_NAME=${BROKER_NAME:example-broker}
+BROKER_NAME=${BROKER_NAME:-example-broker}
 set -u
 
 
