@@ -3,6 +3,7 @@
 set -eo pipefail
 
 NAMESPACE=${NAMESPACE:-default}
+BROKER_NAME=${BROKER_NAME:-example-broker}
 set -u
 
 
@@ -45,7 +46,7 @@ kind: Trigger
 metadata:
   name: hello-display
 spec:
-  broker: default
+  broker: $BROKER_NAME
   filter:
     attributes:
       type: greeting
@@ -73,7 +74,7 @@ spec:
 EOF
 kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready
 
-kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
+kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/$BROKER_NAME" \
   -X POST \
   -H "Ce-Id: say-hello" \
   -H "Ce-Specversion: 1.0" \
