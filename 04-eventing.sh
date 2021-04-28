@@ -46,6 +46,7 @@ apiVersion: eventing.knative.dev/v1
 kind: broker
 metadata:
  name: ${BROKER_NAME}
+ namespace: ${NAMESPACE}
 EOF
 
 sleep 3
