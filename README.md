@@ -3,19 +3,9 @@
 Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
 
-## Docker post installation configuration to run docker commands non-root logged in user without sudo 
-# Note: Make sure group called "docker" exists on the vm/bare-metal compute instance 
-#
-```bash
-sudo usermod -aG docker $USER
-# Eliminates relogin to login shell and restart of vm/bare metal
-newgrp docker
-```
-# Verify whether or not docker commands can be run as non-root logged in user without sudo
-```bash
-docker ps -a
 ```
 
+Please refer and complete the tasks specified the "Install Docker for Desktop" section before executing the command below
 
 TLDR;
 ```bash
@@ -39,6 +29,17 @@ Verify that docker engine and CLI is working:
 ```
 docker version
 ```
+# Docker post installation configuration to run docker commands non-root logged in user without sudo 
+# Note: Make sure group called "docker" exists on the vm/bare-metal compute instance 
+#
+```bash
+sudo usermod -aG docker $USER
+# Refresh docker group membership of logged in non-root user
+newgrp docker
+```
+# Verify whether or not docker commands can be run as non-root logged in user without sudo
+```bash
+docker ps -a
 
 
 ## Create cluster with Kind
