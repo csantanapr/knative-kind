@@ -277,7 +277,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: eventing.knative.dev/v1
     kind: broker
     metadata:
-      name: default
+      name: example-broker
       namespace: $NAMESPACE
     EOF
     ```
@@ -289,8 +289,8 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Shoud print the address of the broker
     ```
-    NAME      URL                                                                        AGE   READY   REASON
-    default   http://broker-ingress.knative-eventing.svc.cluster.local/default/default   47s   True
+    NAME             URL                                                                               AGE   READY   REASON
+    example-broker   http://broker-ingress.knative-eventing.svc.cluster.local/default/example-broker   47s   True
     ```
 
 - To deploy the `hello-display` consumer to your cluster, run the following command:
@@ -338,7 +338,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     metadata:
       name: hello-display
     spec:
-      broker: default
+      broker: example-broker
       filter:
         attributes:
           type: greeting
@@ -373,7 +373,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Send a Cloud Event usnig `curl` pod created in the previous step.
     ```bash
-    kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/default" \
+    kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/example-broker" \
       -X POST \
       -H "Ce-Id: say-hello" \
       -H "Ce-Specversion: 1.0" \
