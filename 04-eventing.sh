@@ -50,4 +50,4 @@ metadata:
 EOF
 
 sleep 3
-kubectl get broker ${BROKER_NAME}
+kubectl -n ${NAMESPACE} get broker ${BROKER_NAME}
