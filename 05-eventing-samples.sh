@@ -84,5 +84,5 @@ kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-ev
   -d '{"msg":"Hello Knative!"}'
 
 kubectl wait pod --timeout=-1s --for=condition=Ready -l app=hello-display -n $NAMESPACE
-
+sleep 3
 kubectl -n $NAMESPACE logs -l app=hello-display --tail=100
