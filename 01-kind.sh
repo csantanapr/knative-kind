@@ -3,12 +3,13 @@
 set -eo pipefail
 
 kindVersion=$(kind version);
-K8S_VERSION=${k8sVersion:-v1.20.2@sha256:15d3b5c4f521a84896ed1ead1b14e4774d02202d5c65ab68f30eeaf310a3b1a7}
+K8S_VERSION=${k8sVersion:-v1.21.1@sha256:fae9a58f17f18f06aeac9772ca8b5ac680ebbed985e266f711d936e91d113bad}
 CLUSTER_NAME=${KIND_CLUSTER_NAME:-knative}
+KIND_VERSION=${KIND_VERSION:-v0.11}
 
 echo "KinD version is ${kindVersion}"
-if [[ ! $kindVersion =~ "v0.10." ]]; then
-  echo "WARNING: Please make sure you are using KinD version v0.10.x, download from https://github.com/kubernetes-sigs/kind/releases"
+if [[ ! $kindVersion =~ "${KIND_VERSION}." ]]; then
+  echo "WARNING: Please make sure you are using KinD version ${KIND_VERSION}.x, download from https://github.com/kubernetes-sigs/kind/releases"
   echo "For example if using brew, run: brew upgrade kind"
   read -p "Do you want to continue on your own risk? Y/n: " REPLYKIND </dev/tty
   if [ "$REPLYKIND" == "Y" ] || [ "$REPLYKIND" == "y" ] || [ -z "$REPLYKIND" ]; then
