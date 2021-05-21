@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 set -eo pipefail
+set -u
 
 NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
-set -u
+
 
 
 kubectl -n $NAMESPACE apply -f - << EOF
@@ -40,6 +41,8 @@ spec:
     targetPort: 8080
 EOF
 
+kubectl  -n $NAMESPACE wait pod --timeout=-1s  -l app=hello-display --for=condition=Ready > /dev/null 2>&1
+
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
@@ -72,17 +75,21 @@ spec:
     name: curl
     tty: true
 EOF
-kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready
+kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready > /dev/null 2>&1
 
-kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/$BROKER_NAME" \
+set +e
+MSG=""
+until [[ $MSG == *"Hello Knative"* ]]; do
+  kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/$BROKER_NAME" \
   -X POST \
   -H "Ce-Id: say-hello" \
   -H "Ce-Specversion: 1.0" \
   -H "Ce-Type: greeting" \
   -H "Ce-Source: not-sendoff" \
   -H "Content-Type: application/json" \
-  -d '{"msg":"Hello Knative!"}'
+  -d '{"msg":"Hello Knative!"}' > /dev/null 2>&1
+  sleep 5
+  MSG=$(kubectl -n $NAMESPACE logs -l app=hello-display --tail=100 | grep msg)
+done
+echo "Cloud Event Delivered $MSG"
 
-kubectl wait pod --timeout=-1s --for=condition=Ready -l app=hello-display -n $NAMESPACE
-sleep 3
-kubectl -n $NAMESPACE logs -l app=hello-display --tail=100

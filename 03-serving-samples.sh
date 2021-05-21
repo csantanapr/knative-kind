@@ -20,7 +20,8 @@ spec:
               value: "Knative"
 EOF
 
-kubectl wait ksvc hello --all --timeout=-1s --for=condition=Ready
+echo "Downloading hello App container image..."
+kubectl wait ksvc hello --all --timeout=-1s --for=condition=Ready > /dev/null 2>&1
 SERVICE_URL=$(kubectl get ksvc hello -o jsonpath='{.status.url}')
 echo "The Knative Service hello endpoint is $SERVICE_URL"
 curl $SERVICE_URL

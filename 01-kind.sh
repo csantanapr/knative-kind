@@ -45,9 +45,9 @@ nodes:
     listenAddress: 127.0.0.1
     hostPort: 80
 EOF
-echo "Waiting on cluster to be ready"
+echo "Waiting on cluster to be ready..."
 sleep 10
-until kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system
+until kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null 2>&1
 do
-   kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system
+   kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null 2>&1
 done

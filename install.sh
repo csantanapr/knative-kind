@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-echo -e "\033[0;92m ✅ Checking dependencies... \033[0m"
+echo -e "✅ Checking dependencies... \033[0m"
 STARTTIME=$(date +%s)
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | bash
 echo -e "🍿 Installing Knative Serving... \033[0m"
