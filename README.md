@@ -252,7 +252,7 @@ Some people call this **Serverless** 🎉 🌮 🔥
 
 ## Install Knative Eventing
 
-TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/03-eventing.sh | sh`
+TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/04-eventing.sh | sh`
 
 1. Select the version of Knative Eventing to install
     ```bash
