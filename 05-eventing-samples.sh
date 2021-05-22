@@ -91,5 +91,5 @@ until [[ $MSG == *"Hello Knative"* ]]; do
   sleep 5
   MSG=$(kubectl -n $NAMESPACE logs -l app=hello-display --tail=100 | grep msg)
 done
-echo "Cloud Event Delivered $MSG"
+echo "Cloud Event Delivered $MSG" | head -1
 
