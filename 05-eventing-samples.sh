@@ -77,8 +77,8 @@ spec:
 EOF
 kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready > /dev/null 2>&1
 
-set +e
 MSG=""
+echo 'Sending Cloud Event to event broker'
 until [[ $MSG == *"Hello Knative"* ]]; do
   kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/$BROKER_NAME" \
   -X POST \
@@ -89,7 +89,7 @@ until [[ $MSG == *"Hello Knative"* ]]; do
   -H "Content-Type: application/json" \
   -d '{"msg":"Hello Knative!"}' > /dev/null 2>&1
   sleep 5
-  MSG=$(kubectl -n $NAMESPACE logs -l app=hello-display --tail=100 | grep msg)
+  MSG=$(kubectl -n $NAMESPACE logs -l app=hello-display --tail=100 | grep msg || true)
 done
 echo "Cloud Event Delivered $MSG" | head -1
 
