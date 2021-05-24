@@ -12,7 +12,7 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/05/21 with:
+>Updated and verified on 2021/05/24 with:
 >- Knative Serving 0.23.0
 >- Knative Kourier 0.23.0
 >- Knative Eventing 0.23.0
@@ -23,7 +23,7 @@ If you only need the install without the sample apps then use `curl -sL install.
 ## Install Docker for Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
-Docker post installation configuration to run docker commands as non-root logged in user without sudo 
+Docker post installation configuration to run docker commands as non-root logged in user without sudo
 Note: Make sure group called "docker" exists on the vm/bare-metal compute instance prior to adding user to docker group
 ```bash
 sudo usermod -aG docker $USER
@@ -57,7 +57,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.20.2@sha256:8f7ea6e7642c0da54f04a7ee10431549c0257315b3a634f6ef2fecaaedb19bab
+      image: kindest/node:v1.21.1@sha256:fae9a58f17f18f06aeac9772ca8b5ac680ebbed985e266f711d936e91d113bad
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -74,7 +74,11 @@ For more information installing or using kind checkout the docs https://kind.sig
 
 ## Install Knative Serving
 
-TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | sh`
+TLDR;
+```
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | sh
+curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kourier.sh | sh
+```
 
 1. Select the version of Knative Serving to install
     ```bash
@@ -87,7 +91,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
 
-    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
+    kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
     ```
 1. Select the version of Knative Net Kourier to install
     ```bash
@@ -97,12 +101,8 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 1. Install Knative Layer kourier in namespace `kourier-system`
     ```bash
     kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
-    kubectl wait --for=condition=Established --all crd
-
-    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n kourier-system
-
-    # deployment for net-kourier gets deployed to namespace knative-serving
-    kubectl wait deployment --all --timeout=-1s --for=condition=Available -n knative-serving
+    kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system
+    kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving
     ```
 1. Set the environment variable `EXTERNAL_IP` to External IP Address of the Worker Node
     ```bash
