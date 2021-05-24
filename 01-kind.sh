@@ -41,7 +41,7 @@ nodes:
 - role: control-plane
   image: kindest/node:${K8S_VERSION}
   extraPortMappings:
-  - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
+  - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier or contour ingress
     listenAddress: 127.0.0.1
     hostPort: 80
 EOF

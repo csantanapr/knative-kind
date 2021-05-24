@@ -2,11 +2,19 @@
 
 set -eo pipefail
 
+KNATIVE_NET=${KNATIVE_NET:-kourier}
+
 echo -e "✅ Checking dependencies... \033[0m"
 STARTTIME=$(date +%s)
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/01-kind.sh | bash
 echo -e "🍿 Installing Knative Serving... \033[0m"
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-serving.sh | bash
+echo -e "🔌 Installing Knative Serving Networking Layer ${KNATIVE_NET}... \033[0m"
+if [[ "$KNATIVE_NET" == "kourier" ]]; then
+    curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kourier.sh | bash
+else
+    curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-contour.sh | bash
+fi
 echo -e "🔥 Installing Knative Eventing... \033[0m"
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/04-eventing.sh | bash
 DURATION=$(($(date +%s) - $STARTTIME))
