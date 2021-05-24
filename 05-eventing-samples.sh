@@ -41,7 +41,7 @@ spec:
     targetPort: 8080
 EOF
 
-kubectl  -n $NAMESPACE wait pod --timeout=-1s  -l app=hello-display --for=condition=Ready > /dev/null 2>&1
+kubectl  -n $NAMESPACE wait pod --timeout=-1s  -l app=hello-display --for=condition=Ready > /dev/null
 
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: eventing.knative.dev/v1
@@ -75,7 +75,7 @@ spec:
     name: curl
     tty: true
 EOF
-kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready > /dev/null 2>&1
+kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready > /dev/null
 
 MSG=""
 echo 'Sending Cloud Event to event broker'
@@ -87,7 +87,7 @@ until [[ $MSG == *"Hello Knative"* ]]; do
   -H "Ce-Type: greeting" \
   -H "Ce-Source: not-sendoff" \
   -H "Content-Type: application/json" \
-  -d '{"msg":"Hello Knative!"}' > /dev/null 2>&1
+  -d '{"msg":"Hello Knative!"}' > /dev/null
   sleep 5
   MSG=$(kubectl -n $NAMESPACE logs -l app=hello-display --tail=100 | grep msg || true)
 done

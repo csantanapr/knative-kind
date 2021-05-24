@@ -10,31 +10,31 @@ KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml > /dev/null 2>&1 && break
+  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done
-kubectl wait --for=condition=Established --all crd > /dev/null 2>&1
+kubectl wait --for=condition=Established --all crd > /dev/null
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml > /dev/null 2>&1 && break
+  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null 2>&1
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml > /dev/null 2>&1 && break
+  kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done
-kubectl wait --for=condition=Established --all crd > /dev/null 2>&1
+kubectl wait --for=condition=Established --all crd > /dev/null
 
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system > /dev/null 2>&1
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system > /dev/null
 # deployment for net-kourier gets deployed to namespace knative-serving
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null 2>&1
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
 
 kubectl patch configmap/config-network \
   --namespace knative-serving \
@@ -63,4 +63,4 @@ spec:
       targetPort: 8080
 EOF
 
-kubectl wait deployment --all --timeout=-1s --for=condition=Available -n kourier-system > /dev/null 2>&1
+kubectl wait deployment --all --timeout=-1s --for=condition=Available -n kourier-system > /dev/null
