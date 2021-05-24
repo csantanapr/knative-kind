@@ -47,7 +47,7 @@ nodes:
 EOF
 echo "Waiting on cluster to be ready..."
 sleep 10
-until kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null 2>&1
+until kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null
 do
-   kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null 2>&1
+   kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null
 done
