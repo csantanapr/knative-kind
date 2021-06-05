@@ -10,6 +10,9 @@ metadata:
   name: hello
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/window: 10s
     spec:
       containers:
         - image: gcr.io/knative-samples/helloworld-go
