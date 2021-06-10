@@ -15,6 +15,11 @@ if [[ "$KNATIVE_NET" == "kourier" ]]; then
 else
     curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-contour.sh | bash
 fi
+# Setup Knative DOMAIN DNS
+INGRESS_HOST="127.0.0.1"
+KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
+kubectl patch configmap -n knative-serving config-domain -p "{\"data\": {\"$KNATIVE_DOMAIN\": \"\"}}"
+
 echo -e "🔥 Installing Knative Eventing... \033[0m"
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/04-eventing.sh | bash
 DURATION=$(($(date +%s) - $STARTTIME))

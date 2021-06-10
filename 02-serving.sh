@@ -4,8 +4,6 @@ set -eo pipefail
 set -u
 
 KNATIVE_VERSION=${KNATIVE_VERSION:-0.23.0}
-INGRESS_HOST="127.0.0.1"
-KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
 
 n=0
 set +e
@@ -27,5 +25,4 @@ done
 set -e
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
 
-# Setup Knative DOMAIN DNS
-kubectl patch configmap -n knative-serving config-domain -p "{\"data\": {\"$KNATIVE_DOMAIN\": \"\"}}"
+
