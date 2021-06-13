@@ -60,27 +60,32 @@ spec:
       name: hello-display
 EOF
 
-kubectl -n $NAMESPACE apply -f - << EOF
-apiVersion: v1
-kind: Pod
+# Exposing broker externally using Knative Kingress (ie King WTF)
+kubectl -n knative-eventing apply -f - << EOF
+apiVersion: networking.internal.knative.dev/v1alpha1
+kind: Ingress
 metadata:
-  labels:
-    run: curl
-  name: curl
+  name: broker-ingress
+  annotations:
+    networking.knative.dev/ingress.class: kourier.ingress.networking.knative.dev
 spec:
-  containers:
-    # This could be any image that we can SSH into and has curl.
-  - image: radial/busyboxplus:curl
-    imagePullPolicy: IfNotPresent
-    name: curl
-    tty: true
+  rules:
+  - hosts:
+    - broker-ingress.knative-eventing.127.0.0.1.nip.io
+    http:
+      paths:
+      - splits:
+        - serviceName: broker-ingress
+          serviceNamespace: knative-eventing
+          servicePort: 80
+    visibility: ExternalIP
 EOF
-kubectl wait -n $NAMESPACE pod curl --timeout=-1s --for=condition=Ready > /dev/null
+kubectl wait -n knative-eventing king broker-ingress --timeout=-1s --for=condition=Ready > /dev/null
 
 MSG=""
 echo 'Sending Cloud Event to event broker'
 until [[ $MSG == *"Hello Knative"* ]]; do
-  kubectl -n $NAMESPACE exec curl -- curl -s -v  "http://broker-ingress.knative-eventing.svc.cluster.local/$NAMESPACE/$BROKER_NAME" \
+  curl -s -v  "http://broker-ingress.knative-eventing.127.0.0.1.nip.io/$NAMESPACE/$BROKER_NAME" \
   -X POST \
   -H "Ce-Id: say-hello" \
   -H "Ce-Specversion: 1.0" \
