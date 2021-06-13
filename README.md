@@ -366,12 +366,11 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Expose broker externally using Knative Kingress CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
     ```yaml
-    kubectl -n $NAMESPACE apply -f - << EOF
+    kubectl -n knative-eventing apply -f - << EOF
     apiVersion: networking.internal.knative.dev/v1alpha1
     kind: Ingress
     metadata:
       name: broker-ingress
-      namespace: knative-eventing
       annotations:
         networking.knative.dev/ingress.class: kourier.ingress.networking.knative.dev
     spec:
