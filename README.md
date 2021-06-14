@@ -4,7 +4,7 @@ Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
 Checkout my tutorials for other kubernetes like [docker-desktop](https://github.com/csantanapr/knative-docker-desktop) and [minikube](https://github.com/csantanapr/knative-minikube).
 
-Please refer and complete the tasks specified the "Install Docker for Desktop" and "Install Kind" section before executing the command below
+Please refer and complete the tasks specified the "Install Docker Desktop" and "Install Kind" section before executing the command below
 
 TLDR;
 ```bash
@@ -21,7 +21,7 @@ If you only need the install without the sample apps then use `curl -sL install.
 >- Kubernetes version 1.21.1
 
 
-## Install Docker for Desktop
+## Install Docker Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
 Docker post installation configuration to run docker commands as non-root logged in user without sudo
@@ -365,26 +365,25 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     ```
 
-- Expose broker externally using Knative Kingress CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
+- Install Knative DomainMapping
+    ```bash
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml
+    kubectl wait --for=condition=Established --all crd
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping.yaml
+    ```
+
+- Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
     ```yaml
     kubectl -n knative-eventing apply -f - << EOF
-    apiVersion: networking.internal.knative.dev/v1alpha1
-    kind: Ingress
+    apiVersion: serving.knative.dev/v1alpha1
+    kind: DomainMapping
     metadata:
-      name: broker-ingress
-      annotations:
-        networking.knative.dev/ingress.class: kourier.ingress.networking.knative.dev
+      name: broker-ingress.knative-eventing.127.0.0.1.nip.io
     spec:
-      rules:
-      - hosts:
-        - broker-ingress.knative-eventing.127.0.0.1.nip.io
-        http:
-          paths:
-          - splits:
-            - serviceName: broker-ingress
-              serviceNamespace: knative-eventing
-              servicePort: 80
-        visibility: ExternalIP
+      ref:
+        name: broker-ingress
+        kind: Service
+        apiVersion: v1
     EOF
 
     ```
