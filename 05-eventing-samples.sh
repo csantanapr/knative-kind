@@ -6,6 +6,28 @@ set -u
 NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
 
+#Installing Domain Mapping to expose broker externally
+KNATIVE_VERSION=${KNATIVE_VERSION:-0.23.0}
+
+n=0
+set +e
+until [ $n -ge 2 ]; do
+  kubectl apply -f kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml > /dev/null && break
+  n=$[$n+1]
+  sleep 5
+done
+set -e
+kubectl wait --for=condition=Established --all crd > /dev/null
+
+n=0
+set +e
+until [ $n -ge 2 ]; do
+  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping.yaml > /dev/null && break
+  n=$[$n+1]
+  sleep 5
+done
+set -e
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
 
 
 kubectl -n $NAMESPACE apply -f - << EOF
@@ -60,25 +82,17 @@ spec:
       name: hello-display
 EOF
 
-# Exposing broker externally using Knative Kingress (ie King WTF)
+# Exposing broker externally using Knative Domain Mapping
 kubectl -n knative-eventing apply -f - << EOF
-apiVersion: networking.internal.knative.dev/v1alpha1
-kind: Ingress
+apiVersion: serving.knative.dev/v1alpha1
+kind: DomainMapping
 metadata:
-  name: broker-ingress
-  annotations:
-    networking.knative.dev/ingress.class: kourier.ingress.networking.knative.dev
+  name: broker-ingress.knative-eventing.127.0.0.1.nip.io
 spec:
-  rules:
-  - hosts:
-    - broker-ingress.knative-eventing.127.0.0.1.nip.io
-    http:
-      paths:
-      - splits:
-        - serviceName: broker-ingress
-          serviceNamespace: knative-eventing
-          servicePort: 80
-    visibility: ExternalIP
+  ref:
+    name: broker-ingress
+    kind: Service
+    apiVersion: v1
 EOF
 kubectl wait -n knative-eventing king broker-ingress --timeout=-1s --for=condition=Ready > /dev/null
 
