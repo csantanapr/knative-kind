@@ -27,7 +27,9 @@ until [ $n -ge 2 ]; do
   sleep 5
 done
 set -e
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
+sleep 20
+kubectl wait pod --timeout=-1s --for=condition=Ready -l app=domainmapping-webhook -n knative-serving
+kubectl wait pod --timeout=-1s --for=condition=Ready -l app=domain-mapping -n knative-serving
 
 
 kubectl -n $NAMESPACE apply -f - << EOF
@@ -94,7 +96,9 @@ spec:
     kind: Service
     apiVersion: v1
 EOF
-kubectl wait -n knative-eventing king broker-ingress --timeout=-1s --for=condition=Ready > /dev/null
+sleep 2
+kubectl wait -n knative-eventing DomainMapping broker-ingress.knative-eventing.127.0.0.1.nip.io --timeout=-1s --for=condition=Ready > /dev/null
+
 
 MSG=""
 echo 'Sending Cloud Event to event broker'

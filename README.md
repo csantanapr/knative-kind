@@ -365,26 +365,25 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     ```
 
-- Expose broker externally using Knative Kingress CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
+- Install Knative DomainMapping
+    ```bash
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml
+    kubectl wait --for=condition=Established --all crd
+    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping.yaml
+    ```
+
+- Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
     ```yaml
     kubectl -n knative-eventing apply -f - << EOF
-    apiVersion: networking.internal.knative.dev/v1alpha1
-    kind: Ingress
+    apiVersion: serving.knative.dev/v1alpha1
+    kind: DomainMapping
     metadata:
-      name: broker-ingress
-      annotations:
-        networking.knative.dev/ingress.class: kourier.ingress.networking.knative.dev
+      name: broker-ingress.knative-eventing.127.0.0.1.nip.io
     spec:
-      rules:
-      - hosts:
-        - broker-ingress.knative-eventing.127.0.0.1.nip.io
-        http:
-          paths:
-          - splits:
-            - serviceName: broker-ingress
-              serviceNamespace: knative-eventing
-              servicePort: 80
-        visibility: ExternalIP
+      ref:
+        name: broker-ingress
+        kind: Service
+        apiVersion: v1
     EOF
 
     ```
