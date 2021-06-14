@@ -4,7 +4,7 @@ Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
 Checkout my tutorials for other kubernetes like [docker-desktop](https://github.com/csantanapr/knative-docker-desktop) and [minikube](https://github.com/csantanapr/knative-minikube).
 
-Please refer and complete the tasks specified the "Install Docker for Desktop" and "Install Kind" section before executing the command below
+Please refer and complete the tasks specified the "Install Docker Desktop" and "Install Kind" section before executing the command below
 
 TLDR;
 ```bash
@@ -21,7 +21,7 @@ If you only need the install without the sample apps then use `curl -sL install.
 >- Kubernetes version 1.21.1
 
 
-## Install Docker for Desktop
+## Install Docker Desktop
 To use kind, you will also need to [install docker](https://docs.docker.com/install/).
 
 Docker post installation configuration to run docker commands as non-root logged in user without sudo
