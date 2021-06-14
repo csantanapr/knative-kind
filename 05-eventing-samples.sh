@@ -12,7 +12,7 @@ KNATIVE_VERSION=${KNATIVE_VERSION:-0.23.0}
 n=0
 set +e
 until [ $n -ge 2 ]; do
-  kubectl apply -f kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml > /dev/null && break
+  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done
