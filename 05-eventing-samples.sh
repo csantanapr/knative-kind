@@ -7,6 +7,7 @@ NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
 
 #Installing Domain Mapping to expose broker externally
+echo "Installing Domain Mapping"
 KNATIVE_VERSION=${KNATIVE_VERSION:-0.23.0}
 
 n=0
@@ -103,7 +104,7 @@ kubectl wait -n knative-eventing DomainMapping broker-ingress.knative-eventing.1
 MSG=""
 echo 'Sending Cloud Event to event broker'
 until [[ $MSG == *"Hello Knative"* ]]; do
-  curl -s -v  "http://broker-ingress.knative-eventing.127.0.0.1.nip.io/$NAMESPACE/$BROKER_NAME" \
+  curl -s "http://broker-ingress.knative-eventing.127.0.0.1.nip.io/$NAMESPACE/$BROKER_NAME" \
   -X POST \
   -H "Ce-Id: say-hello" \
   -H "Ce-Specversion: 1.0" \
