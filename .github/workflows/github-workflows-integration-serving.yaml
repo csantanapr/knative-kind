@@ -1,0 +1,36 @@
+name: Serving GitHub Workflows Integration
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  integration-test:
+    name: Integration Test
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        virtenv: [ubuntu-18.04, ubuntu-20.04]
+    runs-on: ${{ matrix.virtenv }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Kind
+        run: bash 01-kind.sh
+
+      - name: Install Serving
+        run: bash 02-serving.sh
+
+      - name: Install Kourier
+        run: bash 02-kourier.sh
+
+      - name: Setup domain
+        run: |
+          INGRESS_HOST="127.0.0.1"
+          KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
+          kubectl patch configmap -n knative-serving config-domain -p "{\"data\": {\"$KNATIVE_DOMAIN\": \"\"}}"
+
+      - name: Sample Apps
+        run: bash 03-serving-samples.sh

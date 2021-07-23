@@ -1,4 +1,4 @@
-name: GitHub Workflows Integration
+name: Eventing GitHub Workflows Integration
 on: [push, pull_request]
 
 defaults:
@@ -16,6 +16,12 @@ jobs:
     runs-on: ${{ matrix.virtenv }}
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Install and Demo
-        run: bash demo.sh
+
+      - name: Install Kind
+        run: bash 01-kind.sh
+
+      - name: Install Eventing
+        run: bash 04-eventing.sh
+
+      - name: Sample Apps
+        run: bash 05-eventing-samples.sh
