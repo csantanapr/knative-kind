@@ -9,6 +9,7 @@ KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.24.0}
 n=0
 until [ $n -ge 2 ]; do
   kubectl apply -f https://github.com/knative-sandbox/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml && break
+  echo "Kourier failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
