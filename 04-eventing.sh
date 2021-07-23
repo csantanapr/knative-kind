@@ -47,7 +47,10 @@ done
 #kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 sleep 30
 kubectl get pods -A --show-labels
-#kubectl describe pod -n knative-eventing
+kubectl describe pod -n knative-eventing -l app=mt-broker-controller
+kubectl describe pod -n knative-eventing -l eventing.knative.dev/brokerRole=filter
+kubectl describe pod -n knative-eventing -l eventing.knative.dev/brokerRole=ingress
+
 
 
 kubectl apply -f - <<EOF
