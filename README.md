@@ -13,10 +13,10 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/06/20 with:
->- Knative Serving 0.23.0
->- Knative Kourier 0.23.0
->- Knative Eventing 0.23.0
+>Updated and verified on 2021/07/22 with:
+>- Knative Serving 0.24.0
+>- Knative Kourier 0.24.0
+>- Knative Eventing 0.24.0
 >- Kind version 0.11.0
 >- Kubernetes version 1.21.1
 

@@ -3,7 +3,7 @@
 set -eo pipefail
 set -u
 
-KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.23.0}
+KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-0.24.1}
 NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
 
@@ -50,5 +50,5 @@ metadata:
  namespace: ${NAMESPACE}
 EOF
 
-sleep 3
+sleep 10
 kubectl -n ${NAMESPACE} get broker ${BROKER_NAME}
