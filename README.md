@@ -298,7 +298,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Verify broker
     ```bash
-    kubectl -n $NAMESPACE get broker default
+    kubectl -n $NAMESPACE get broker example-broker
     ```
 
 - Shoud print the address of the broker
