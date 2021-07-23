@@ -46,7 +46,9 @@ until [ $n -ge 2 ]; do
 done
 #kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 sleep 30
-kubectl get pods -A
+kubectl get pods -A --show-labels
+#kubectl describe pod -n knative-eventing
+
 
 kubectl apply -f - <<EOF
 apiVersion: eventing.knative.dev/v1
