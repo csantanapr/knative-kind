@@ -6,33 +6,6 @@ set -u
 NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
 
-#Installing Domain Mapping to expose broker externally
-echo "Installing Domain Mapping"
-KNATIVE_VERSION=${KNATIVE_VERSION:-0.23.0}
-
-n=0
-set +e
-until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml > /dev/null && break
-  n=$[$n+1]
-  sleep 5
-done
-set -e
-kubectl wait --for=condition=Established --all crd > /dev/null
-
-n=0
-set +e
-until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping.yaml > /dev/null && break
-  n=$[$n+1]
-  sleep 5
-done
-set -e
-sleep 20
-kubectl wait pod --timeout=-1s --for=condition=Ready -l app=domainmapping-webhook -n knative-serving
-kubectl wait pod --timeout=-1s --for=condition=Ready -l app=domain-mapping -n knative-serving
-
-
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: apps/v1
 kind: Deployment
@@ -86,6 +59,15 @@ spec:
 EOF
 
 # Exposing broker externally using Knative Domain Mapping
+kubectl apply -f - <<EOF
+apiVersion: networking.internal.knative.dev/v1alpha1
+kind: ClusterDomainClaim
+metadata:
+  name: broker-ingress.knative-eventing.127.0.0.1.nip.io
+spec:
+  namespace: knative-eventing
+EOF
+
 kubectl -n knative-eventing apply -f - << EOF
 apiVersion: serving.knative.dev/v1alpha1
 kind: DomainMapping
