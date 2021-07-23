@@ -3,14 +3,15 @@
 set -eo pipefail
 set -u
 
-KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.23.0}
+KNATIVE_NET_KOURIER_VERSION=${KNATIVE_NET_KOURIER_VERSION:-0.24.0}
 
 ## INSTALL KOURIER
 n=0
-until [ $n -ge 2 ]; do
+until [ $n -ge 3 ]; do
   kubectl apply -f https://github.com/knative-sandbox/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml > /dev/null && break
+  echo "Kourier failed to install on first try"
   n=$[$n+1]
-  sleep 5
+  sleep 10
 done
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system > /dev/null
 kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null

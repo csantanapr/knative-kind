@@ -13,11 +13,11 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/06/20 with:
->- Knative Serving 0.23.0
->- Knative Kourier 0.23.0
->- Knative Eventing 0.23.0
->- Kind version 0.11.0
+>Updated and verified on 2021/07/22 with:
+>- Knative Serving 0.24.0
+>- Knative Kourier 0.24.0
+>- Knative Eventing 0.24.1
+>- Kind version 0.11.1
 >- Kubernetes version 1.21.1
 
 
@@ -58,7 +58,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.21.1@sha256:fae9a58f17f18f06aeac9772ca8b5ac680ebbed985e266f711d936e91d113bad
+      image: kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -83,7 +83,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.23.0"
+    export KNATIVE_VERSION="0.24.0"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
@@ -96,7 +96,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
     ```
 1. Select the version of Knative Net Kourier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.23.0"
+    export KNATIVE_NET_KOURIER_VERSION="0.24.0"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
@@ -257,7 +257,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Eventing to install
     ```bash
-    export KNATIVE_EVENTING_VERSION="0.23.0"
+    export KNATIVE_EVENTING_VERSION="0.24.1"
     ```
 1. Install Knative Eventing in namespace `knative-eventing`
     ```bash
@@ -298,7 +298,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Verify broker
     ```bash
-    kubectl -n $NAMESPACE get broker default
+    kubectl -n $NAMESPACE get broker example-broker
     ```
 
 - Shoud print the address of the broker
