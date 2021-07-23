@@ -39,7 +39,7 @@ kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-e
 n=0
 until [ $n -ge 2 ]; do
   kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml > /dev/null && break
-  echo "Eventing MT Memory Channel failed to install on first try"
+  echo "Eventing MT Memory Broker failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
