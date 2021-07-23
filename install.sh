@@ -3,7 +3,7 @@
 set -eo pipefail
 
 KNATIVE_NET=${KNATIVE_NET:-kourier}
-KONK_BRANCH=${KONK_BRANCH:-master}
+KONK_BRANCH=${KONK_BRANCH:-test-gh-action}
 
 echo -e "✅ Checking dependencies... \033[0m"
 STARTTIME=$(date +%s)
