@@ -9,48 +9,41 @@ BROKER_NAME=${BROKER_NAME:-example-broker}
 
 
 
-
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml  && break
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml > /dev/null && break
   echo "Eventing CRDs failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
-kubectl wait --for=condition=Established --all crd
+kubectl wait --for=condition=Established --all crd > /dev/null
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml  && break
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml > /dev/null && break
   echo "Eventing Core failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing > /dev/null
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml  && break
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml > /dev/null && break
   echo "Eventing Memory Channel failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing > /dev/null
 
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml  && break
+  kubectl apply -f https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml > /dev/null && break
   echo "Eventing MT Memory Broker failed to install on first try"
   n=$[$n+1]
   sleep 5
 done
-#kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
-sleep 30
-kubectl get pods -A --show-labels
-kubectl describe pod -n knative-eventing -l app=mt-broker-controller
-kubectl describe pod -n knative-eventing -l eventing.knative.dev/brokerRole=filter
-kubectl describe pod -n knative-eventing -l eventing.knative.dev/brokerRole=ingress
-
+kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing > /dev/null
 
 
 kubectl apply -f - <<EOF
