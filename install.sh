@@ -7,7 +7,9 @@ KONK_BRANCH=${KONK_BRANCH:-master}
 
 echo -e "✅ Checking dependencies... \033[0m"
 STARTTIME=$(date +%s)
-curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/${KONK_BRANCH}/01-kind.sh | bash
+
+# The command below executes 01-kind.sh in the same bash shell so that exit commands are not swallowed
+source /dev/stdin <<< "$(curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/${KONK_BRANCH}/01-kind.sh)"
 echo -e "🍿 Installing Knative Serving... \033[0m"
 curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/${KONK_BRANCH}/02-serving.sh | bash
 echo -e "🔌 Installing Knative Serving Networking Layer ${KNATIVE_NET}... \033[0m"
