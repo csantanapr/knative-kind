@@ -34,7 +34,7 @@ elif [ "$REPLY" == "N" ] || [ "$REPLY" == "n" ] || [ -z "$REPLY" ]; then
 fi
 
 KIND_CLUSTER=$(mktemp)
-cat <<EOF | kind create cluster --name ${CLUSTER_NAME} --config=-
+cat <<EOF | kind create cluster --name ${CLUSTER_NAME} --wait 120s --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -45,6 +45,3 @@ nodes:
     listenAddress: 127.0.0.1
     hostPort: 80
 EOF
-echo "Waiting on cluster to be ready..."
-sleep 10
-kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kube-system > /dev/null
