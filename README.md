@@ -13,10 +13,10 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/07/22 with:
->- Knative Serving 0.24.0
->- Knative Kourier 0.24.0
->- Knative Eventing 0.24.1
+>Updated and verified on 2021/10/08 with:
+>- Knative Serving 0.26.0
+>- Knative Kourier 0.26.0
+>- Knative Eventing 0.26.1
 >- Kind version 0.11.1
 >- Kubernetes version 1.21.1
 
@@ -83,7 +83,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.24.0"
+    export KNATIVE_VERSION="0.26.0"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
@@ -96,7 +96,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
     ```
 1. Select the version of Knative Net Kourier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.24.0"
+    export KNATIVE_NET_KOURIER_VERSION="0.26.0"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
@@ -257,7 +257,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Eventing to install
     ```bash
-    export KNATIVE_EVENTING_VERSION="0.24.1"
+    export KNATIVE_EVENTING_VERSION="0.26.1"
     ```
 1. Install Knative Eventing in namespace `knative-eventing`
     ```bash
