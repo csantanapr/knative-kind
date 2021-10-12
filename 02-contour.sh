@@ -3,12 +3,11 @@
 set -eo pipefail
 set -u
 
-KNATIVE_NET_CONTOUR_VERSION=${KNATIVE_NET_CONTOUR_VERSION:-0.26.0}
 
 ## INSTALL CONTOUR
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative-sandbox/net-contour/releases/download/v${KNATIVE_NET_CONTOUR_VERSION}/contour.yaml > /dev/null && break
+  kubectl apply -f https://storage.googleapis.com/knative-nightly/net-contour/latest/contour.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done
@@ -19,7 +18,7 @@ kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n contour-e
 ## INSTALL NET CONTOUR
 n=0
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative-sandbox/net-contour/releases/download/v${KNATIVE_NET_CONTOUR_VERSION}/net-contour.yaml > /dev/null && break
+  kubectl apply -f https://storage.googleapis.com/knative-nightly/net-contour/latest/net-contour.yaml > /dev/null && break
   n=$[$n+1]
   sleep 5
 done

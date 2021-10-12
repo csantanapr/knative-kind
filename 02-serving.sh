@@ -3,12 +3,10 @@
 set -eo pipefail
 set -u
 
-KNATIVE_VERSION=${KNATIVE_VERSION:-0.26.0}
-
 n=0
 set +e
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml > /dev/null && break
+  kubectl apply -f https://storage.googleapis.com/knative-nightly/serving/latest/serving-crds.yaml > /dev/null && break
   echo "Serving CRDs failed to install on first try"
   n=$[$n+1]
   sleep 5
@@ -19,7 +17,7 @@ kubectl wait --for=condition=Established --all crd > /dev/null
 n=0
 set +e
 until [ $n -ge 2 ]; do
-  kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml > /dev/null && break
+  kubectl apply -f https://storage.googleapis.com/knative-nightly/serving/latest/serving-core.yaml > /dev/null && break
   echo "Serving Core failed to install on first try"
   n=$[$n+1]
   sleep 5
