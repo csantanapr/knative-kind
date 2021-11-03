@@ -13,12 +13,12 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/10/08 with:
->- Knative Serving 0.26.0
->- Knative Kourier 0.26.0
->- Knative Eventing 0.26.1
+>Updated and verified on 2021/11/02 with:
+>- Knative Serving 1.0.0
+>- Knative Kourier 1.0.0
+>- Knative Eventing 1.0.0
 >- Kind version 0.11.1
->- Kubernetes version 1.21.1
+>- Kubernetes version 1.22.0
 
 
 ## Install Docker Desktop
@@ -83,25 +83,25 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
 
 1. Select the version of Knative Serving to install
     ```bash
-    export KNATIVE_VERSION="0.26.0"
+    export KNATIVE_VERSION="1.0.0"
     ```
 1. Install Knative Serving in namespace `knative-serving`
     ```bash
-    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-crds.yaml
+    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-crds.yaml
     kubectl wait --for=condition=Established --all crd
 
-    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-core.yaml
+    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-core.yaml
 
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving > /dev/null
     ```
 1. Select the version of Knative Net Kourier to install
     ```bash
-    export KNATIVE_NET_KOURIER_VERSION="0.26.0"
+    export KNATIVE_NET_KOURIER_VERSION="1.0.0"
     ```
 
 1. Install Knative Layer kourier in namespace `kourier-system`
     ```bash
-    kubectl apply -f https://github.com/knative/net-kourier/releases/download/v$KNATIVE_NET_KOURIER_VERSION/kourier.yaml
+    kubectl apply -f https://github.com/knative/net-kourier/releases/download/knative-v${KNATIVE_NET_KOURIER_VERSION}/kourier.yaml
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n kourier-system
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-serving
     ```
@@ -257,22 +257,22 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 1. Select the version of Knative Eventing to install
     ```bash
-    export KNATIVE_EVENTING_VERSION="0.26.1"
+    export KNATIVE_EVENTING_VERSION="1.0.0"
     ```
 1. Install Knative Eventing in namespace `knative-eventing`
     ```bash
-    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-crds.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/knative-v${KNATIVE_EVENTING_VERSION}/eventing-crds.yaml
     kubectl wait --for=condition=Established --all crd
 
-    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/eventing-core.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/knative-v${KNATIVE_EVENTING_VERSION}/eventing-core.yaml
 
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
-    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/in-memory-channel.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/knative-v${KNATIVE_EVENTING_VERSION}/in-memory-channel.yaml
 
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
-    kubectl apply --filename https://github.com/knative/eventing/releases/download/v$KNATIVE_EVENTING_VERSION/mt-channel-broker.yaml
+    kubectl apply --filename https://github.com/knative/eventing/releases/download/knative-v${KNATIVE_EVENTING_VERSION}/mt-channel-broker.yaml
 
     kubectl wait pod --timeout=-1s --for=condition=Ready -l '!job-name' -n knative-eventing
 
@@ -367,9 +367,9 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Install Knative DomainMapping
     ```bash
-    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping-crds.yaml
+    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-domainmapping-crds.yaml
     kubectl wait --for=condition=Established --all crd
-    kubectl apply -f https://github.com/knative/serving/releases/download/v$KNATIVE_VERSION/serving-domainmapping.yaml
+    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-domainmapping.yaml
     ```
 
 - Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
