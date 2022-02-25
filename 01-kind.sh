@@ -4,6 +4,7 @@ set -eo pipefail
 
 kindVersion=$(kind version);
 K8S_VERSION=${k8sVersion:-v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac}
+KIND_BASE=${KIND_BASE:-kindest/node}
 CLUSTER_NAME=${KIND_CLUSTER_NAME:-knative}
 KIND_VERSION=${KIND_VERSION:-v0.11}
 
@@ -33,13 +34,14 @@ elif [ "$REPLY" == "N" ] || [ "$REPLY" == "n" ] || [ -z "$REPLY" ]; then
   exit 0
 fi
 
+echo "Using image ${KIND_BASE}:${K8S_VERSION}"
 KIND_CLUSTER=$(mktemp)
 cat <<EOF | kind create cluster --name ${CLUSTER_NAME} --wait 120s --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  image: kindest/node:${K8S_VERSION}
+  image: ${KIND_BASE}:${K8S_VERSION}
   extraPortMappings:
   - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier or contour ingress
     listenAddress: 127.0.0.1
