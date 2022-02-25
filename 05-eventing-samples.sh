@@ -63,7 +63,7 @@ kubectl apply -f - <<EOF
 apiVersion: networking.internal.knative.dev/v1alpha1
 kind: ClusterDomainClaim
 metadata:
-  name: broker-ingress.knative-eventing.127.0.0.1.nip.io
+  name: broker-ingress.knative-eventing.127.0.0.1.sslip.io
 spec:
   namespace: knative-eventing
 EOF
@@ -72,7 +72,7 @@ kubectl -n knative-eventing apply -f - << EOF
 apiVersion: serving.knative.dev/v1alpha1
 kind: DomainMapping
 metadata:
-  name: broker-ingress.knative-eventing.127.0.0.1.nip.io
+  name: broker-ingress.knative-eventing.127.0.0.1.sslip.io
 spec:
   ref:
     name: broker-ingress
@@ -80,13 +80,13 @@ spec:
     apiVersion: v1
 EOF
 sleep 2
-kubectl wait -n knative-eventing DomainMapping broker-ingress.knative-eventing.127.0.0.1.nip.io --timeout=-1s --for=condition=Ready > /dev/null
+kubectl wait -n knative-eventing DomainMapping broker-ingress.knative-eventing.127.0.0.1.sslip.io --timeout=-1s --for=condition=Ready > /dev/null
 
 
 MSG=""
 echo 'Sending Cloud Event to event broker'
 until [[ $MSG == *"Hello Knative"* ]]; do
-  curl -s "http://broker-ingress.knative-eventing.127.0.0.1.nip.io/$NAMESPACE/$BROKER_NAME" \
+  curl -s "http://broker-ingress.knative-eventing.127.0.0.1.sslip.io/$NAMESPACE/$BROKER_NAME" \
   -X POST \
   -H "Ce-Id: say-hello" \
   -H "Ce-Specversion: 1.0" \

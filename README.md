@@ -111,7 +111,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
     ```
 2. Set the environment variable `KNATIVE_DOMAIN` as the DNS domain using `nip.io`
     ```bash
-    KNATIVE_DOMAIN="$EXTERNAL_IP.nip.io"
+    KNATIVE_DOMAIN="$EXTERNAL_IP.sslip.io"
     echo KNATIVE_DOMAIN=$KNATIVE_DOMAIN
     ```
     Double-check DNS is resolving
@@ -372,13 +372,13 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-domainmapping.yaml
     ```
 
-- Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.nip.io`
+- Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.sslip.io`
     ```yaml
     kubectl -n knative-eventing apply -f - << EOF
     apiVersion: serving.knative.dev/v1alpha1
     kind: DomainMapping
     metadata:
-      name: broker-ingress.knative-eventing.127.0.0.1.nip.io
+      name: broker-ingress.knative-eventing.127.0.0.1.sslip.io
     spec:
       ref:
         name: broker-ingress
@@ -390,7 +390,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Send a Cloud Event usnig `curl` pod created in the previous step.
     ```bash
-    curl -s -v  "http://broker-ingress.knative-eventing.127.0.0.1.nip.io/$NAMESPACE/example-broker" \
+    curl -s -v  "http://broker-ingress.knative-eventing.127.0.0.1.sslip.io/$NAMESPACE/example-broker" \
       -X POST \
       -H "Ce-Id: say-hello" \
       -H "Ce-Specversion: 1.0" \

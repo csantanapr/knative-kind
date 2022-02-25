@@ -20,7 +20,7 @@ else
 fi
 # Setup Knative DOMAIN DNS
 INGRESS_HOST="127.0.0.1"
-KNATIVE_DOMAIN=$INGRESS_HOST.nip.io
+KNATIVE_DOMAIN=$INGRESS_HOST.sslip.io
 kubectl patch configmap -n knative-serving config-domain -p "{\"data\": {\"$KNATIVE_DOMAIN\": \"\"}}"
 
 echo -e "🔥 Installing Knative Eventing... \033[0m"
