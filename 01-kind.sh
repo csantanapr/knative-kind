@@ -3,7 +3,7 @@
 set -eo pipefail
 
 kindVersion=$(kind version);
-K8S_VERSION=${k8sVersion:-v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047}
+K8S_VERSION=${k8sVersion:-v1.23.0@sha256:49824ab1727c04e56a21a5d8372a402fcd32ea51ac96a2706a12af38934f81ac}
 CLUSTER_NAME=${KIND_CLUSTER_NAME:-knative}
 KIND_VERSION=${KIND_VERSION:-v0.11}
 
