@@ -13,12 +13,12 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/11/02 with:
->- Knative Serving 1.0.0
->- Knative Kourier 1.0.0
->- Knative Eventing 1.0.0
+>Updated and verified on 2021/02/24 with:
+>- Knative Serving 1.2.2
+>- Knative Kourier 1.2.0
+>- Knative Eventing 1.2.0
 >- Kind version 0.11.1
->- Kubernetes version 1.22.0
+>- Kubernetes version 1.23.0
 
 
 ## Install Docker Desktop
