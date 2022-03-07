@@ -2,6 +2,8 @@
 
 Setup [Knative](https://knative.dev) on [Kind](https://kind.sigs.k8s.io/)
 
+Get Serverless Apps up and running on your workstation in minutes.
+
 Checkout my tutorials for other kubernetes like [docker-desktop](https://github.com/csantanapr/knative-docker-desktop) and [minikube](https://github.com/csantanapr/knative-minikube).
 
 Please refer and complete the tasks specified the "Install Docker Desktop" and "Install Kind" section before executing the command below
