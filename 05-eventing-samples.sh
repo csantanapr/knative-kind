@@ -5,7 +5,7 @@ set -u
 
 NAMESPACE=${NAMESPACE:-default}
 BROKER_NAME=${BROKER_NAME:-example-broker}
-KNATIVE_DOMAIN=${KNATIVE_DOMAIN:127.0.0.1.sslip.io}
+KNATIVE_DOMAIN=${KNATIVE_DOMAIN:-127.0.0.1.sslip.io}
 
 kubectl -n $NAMESPACE apply -f - << EOF
 apiVersion: apps/v1
