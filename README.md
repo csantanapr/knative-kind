@@ -15,12 +15,12 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/02/24 with:
+>Updated and verified on 2021/03/09 with:
 >- Knative Serving 1.2.2
 >- Knative Kourier 1.2.0
 >- Knative Eventing 1.2.0
 >- Kind version 0.11.1
->- Kubernetes version 1.23.0
+>- Kubernetes version 1.23.4
 
 
 ## Install Docker Desktop
@@ -60,7 +60,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6
+      image: kindest/node:v1.23.4@sha256:0e34f0d0fd448aa2f2819cfd74e99fe5793a6e4938b328f657c8e3f81ee0dfb9
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
@@ -367,20 +367,26 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
     ```
 
-- Install Knative DomainMapping
-    ```bash
-    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-domainmapping-crds.yaml
-    kubectl wait --for=condition=Established --all crd
-    kubectl apply -f https://github.com/knative/serving/releases/download/knative-v${KNATIVE_VERSION}/serving-domainmapping.yaml
-    ```
+- Allow broker to be assign a domain using Knative ClusterDomainClaim CRD
+  ```yaml
+  kubectl apply -f - <<EOF
+  apiVersion: networking.internal.knative.dev/v1alpha1
+  kind: ClusterDomainClaim
+  metadata:
+    name: broker-ingress.knative-eventing.${KNATIVE_DOMAIN}
+  spec:
+    namespace: knative-eventing
+  EOF
+  ```
 
-- Expose broker externally using DomainMapping CRD on `broker-ingress.knative-eventing.127.0.0.1.sslip.io`
+
+- Expose broker externally by assigning a domain using DomainMapping CRD
     ```yaml
     kubectl -n knative-eventing apply -f - << EOF
     apiVersion: serving.knative.dev/v1alpha1
     kind: DomainMapping
     metadata:
-      name: broker-ingress.knative-eventing.127.0.0.1.sslip.io
+      name: broker-ingress.knative-eventing.$KNATIVE_DOMAIN
     spec:
       ref:
         name: broker-ingress
@@ -392,7 +398,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
 
 - Send a Cloud Event usnig `curl` pod created in the previous step.
     ```bash
-    curl -s -v  "http://broker-ingress.knative-eventing.127.0.0.1.sslip.io/$NAMESPACE/example-broker" \
+    curl -s -v  "http://broker-ingress.knative-eventing.$KNATIVE_DOMAIN/$NAMESPACE/example-broker" \
       -X POST \
       -H "Ce-Id: say-hello" \
       -H "Ce-Specversion: 1.0" \
