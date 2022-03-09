@@ -111,7 +111,7 @@ curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master/02-kou
     ```bash
     EXTERNAL_IP="127.0.0.1"
     ```
-2. Set the environment variable `KNATIVE_DOMAIN` as the DNS domain using `nip.io`
+2. Set the environment variable `KNATIVE_DOMAIN` as the DNS domain using `sslip.io`
     ```bash
     KNATIVE_DOMAIN="$EXTERNAL_IP.sslip.io"
     echo KNATIVE_DOMAIN=$KNATIVE_DOMAIN
