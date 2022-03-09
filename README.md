@@ -15,12 +15,12 @@ curl -sL get.konk.dev | bash
 
 If you only need the install without the sample apps then use `curl -sL install.konk.dev | bash`
 
->Updated and verified on 2021/02/24 with:
+>Updated and verified on 2021/03/09 with:
 >- Knative Serving 1.2.2
 >- Knative Kourier 1.2.0
 >- Knative Eventing 1.2.0
 >- Kind version 0.11.1
->- Kubernetes version 1.23.0
+>- Kubernetes version 1.23.4
 
 
 ## Install Docker Desktop
@@ -60,7 +60,7 @@ TLDR; `curl -sL https://raw.githubusercontent.com/csantanapr/knative-kind/master
     apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
     - role: control-plane
-      image: kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6
+      image: kindest/node:v1.23.4@sha256:0e34f0d0fd448aa2f2819cfd74e99fe5793a6e4938b328f657c8e3f81ee0dfb9
       extraPortMappings:
       - containerPort: 31080 # expose port 31380 of the node to port 80 on the host, later to be use by kourier ingress
         hostPort: 80
