@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-KONK_BRANCH=${KONK_BRANCH:-master}
+KONK_BRANCH=${KONK_BRANCH:-test-gh-action}
 
 echo -e "🍿 Installing Knative Serving and Eventing ... \033[0m"
 STARTTIME=$(date +%s)

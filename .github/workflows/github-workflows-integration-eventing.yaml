@@ -1,0 +1,27 @@
+name: Eventing GitHub Workflows Integration
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  integration-test:
+    name: Integration Test
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        virtenv: [ubuntu-18.04, ubuntu-20.04]
+    runs-on: ${{ matrix.virtenv }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Kind
+        run: bash 01-kind.sh
+
+      - name: Install Eventing
+        run: bash 04-eventing.sh
+
+      - name: Sample Apps
+        run: bash 05-eventing-samples.sh
